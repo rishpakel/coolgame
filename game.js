@@ -27,6 +27,14 @@ let player = {
 let platforms = [];
 let platformCount = 10;
 
+// Target platform variables
+let target = {
+    x: canvas.width - 100,
+    y: 100,
+    width: 50,
+    height: 50
+};
+
 // Event listeners for player movement
 let keys = { left: false, right: false, space: false };
 
@@ -46,6 +54,11 @@ document.addEventListener('keyup', (e) => {
 function generatePlatforms() {
     platforms = [];
     let yPos = canvas.height - 100;
+    
+    // Create initial platform where the player starts
+    platforms.push({ x: 0, y: canvas.height - 50, width: canvas.width, height: PLATFORM_HEIGHT });
+
+    // Create random platforms
     for (let i = 0; i < platformCount; i++) {
         let xPos = Math.random() * (canvas.width - 100);
         platforms.push({ x: xPos, y: yPos, width: 100, height: PLATFORM_HEIGHT });
@@ -97,6 +110,22 @@ function jump() {
     }
 }
 
+// Check if player reaches the target
+function checkTargetCollision() {
+    if (
+        player.x + player.width > target.x &&
+        player.x < target.x + target.width &&
+        player.y + player.height > target.y &&
+        player.y < target.y + target.height
+    ) {
+        // Player touched the target, move to the next level (refresh game)
+        setTimeout(() => {
+            alert("Next Level!");
+            location.reload(); // Reload the game (simulate next level)
+        }, 500);
+    }
+}
+
 // Render the game
 function render() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -110,12 +139,17 @@ function render() {
     for (let plat of platforms) {
         ctx.fillRect(plat.x, plat.y, plat.width, plat.height);
     }
+
+    // Draw target
+    ctx.fillStyle = 'red';
+    ctx.fillRect(target.x, target.y, target.width, target.height);
 }
 
 // Update game state
 function update() {
     applyPhysics();
     jump();
+    checkTargetCollision();
     render();
     requestAnimationFrame(update);
 }
