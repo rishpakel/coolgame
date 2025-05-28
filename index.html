@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Catch the Box Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #f0f0f0;
+    }
+    #gameBox {
+      width: 50px;
+      height: 50px;
+      background-color: red;
+      position: absolute;
+      cursor: pointer;
+    }
+    #score {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    #startButton {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<div id="score">Score: 0</div>
+<button id="startButton">Start Game</button>
+<div id="gameBox" style="display:none;"></div>
+
+<script>
+  const box = document.getElementById("gameBox");
+  const scoreDisplay = document.getElementById("score");
+  const startButton = document.getElementById("startButton");
+  let score = 0;
+  let gameInterval;
+
+  function moveBox() {
+    const x = Math.random() * (window.innerWidth - 50);
+    const y = Math.random() * (window.innerHeight - 50);
+    box.style.left = x + "px";
+    box.style.top = y + "px";
+  }
+
+  box.addEventListener("click", () => {
+    score++;
+    scoreDisplay.textContent = "Score: " + score;
+    moveBox();
+  });
+
+  startButton.addEventListener("click", () => {
+    score = 0;
+    scoreDisplay.textContent = "Score: 0";
+    box.style.display = "block";
+    moveBox();
+    clearInterval(gameInterval);
+    gameInterval = setInterval(moveBox, 1000);
+  });
+</script>
+
+</body>
+</html>
